@@ -6,12 +6,13 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Image } from "react-native";
-import bell from "../assets/bell.png";
+import star from "../assets/star.png";
 import crypto from "../assets/crypto.png";
+import settings from "../assets/settings.png";
 import { Home } from "./screens/Home";
 import { Profile } from "./screens/Profile";
 import { Settings } from "./screens/Settings";
-import { Updates } from "./screens/Updates";
+import { Favourites } from "./screens/Favourites";
 import { NotFound } from "./screens/NotFound";
 import { CryptoDetails } from "./screens/CryptoDetails";
 
@@ -33,12 +34,29 @@ const HomeTabs = createBottomTabNavigator({
         ),
       },
     },
-    Updates: {
-      screen: Updates,
+    Favourites: {
+      screen: Favourites,
       options: {
+        title: "Favourites",
         tabBarIcon: ({ color, size }) => (
           <Image
-            source={bell}
+            source={star}
+            tintColor={color}
+            style={{
+              width: size,
+              height: size,
+            }}
+          />
+        ),
+      },
+    },
+    Settings: {
+      screen: Settings,
+      options: {
+        title: "Settings",
+        tabBarIcon: ({ color, size }) => (
+          <Image
+            source={settings}
             tintColor={color}
             style={{
               width: size,
