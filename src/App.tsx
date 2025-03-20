@@ -6,7 +6,7 @@ import { Navigation } from "./navigation";
 
 Asset.loadAsync([
   ...NavigationAssets,
-  require("./assets/newspaper.png"),
+  require("./assets/crypto.png"),
   require("./assets/bell.png"),
 ]);
 

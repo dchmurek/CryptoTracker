@@ -1,4 +1,4 @@
-import { Button, Text } from "@react-navigation/elements";
+import { Text } from "@react-navigation/elements";
 import {
   View,
   TextInput,
@@ -10,19 +10,27 @@ import {
 import { useState, useEffect } from "react";
 import { fetchCryptoData } from "../../api/cryptoApi";
 import { Crypto } from "../../types.d";
+import { useNavigation } from "@react-navigation/native";
 
 export function Home() {
   const [cryptoData, setCryptoData] = useState<Crypto[]>([]);
   const [searchText, setSearchText] = useState("");
 
-  useEffect(() => {
-    loadCryptoData();
-  }, []);
+  const navigation = useNavigation();
 
   const loadCryptoData = async () => {
     const data = await fetchCryptoData();
     setCryptoData(data);
   };
+
+  useEffect(() => {
+    loadCryptoData();
+    const intervalId = setInterval(() => {
+      loadCryptoData();
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const filteredData = cryptoData.filter(
     (coin) =>
@@ -49,7 +57,9 @@ export function Home() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.cryptoItem}
-            onPress={() => console.log("Navigate to CryptoDetails", item)}
+            onPress={() => {
+              navigation.navigate("CryptoDetails", { crypto: item });
+            }}
           >
             <Image source={{ uri: item.image }} style={styles.cryptoIcon} />
             <View>
@@ -63,29 +73,21 @@ export function Home() {
           </TouchableOpacity>
         )}
       />
-
-      {/* Przykładowe przyciski nawigacji */}
-      <View style={styles.buttonContainer}>
-        <Button screen="Profile" params={{ user: "crypto" }}>
-          Go to Profile
-        </Button>
-        <Button screen="Settings">Go to Settings</Button>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#121212" },
+  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000",
     textAlign: "center",
     marginBottom: 10,
   },
   searchInput: {
-    backgroundColor: "#fff",
+    backgroundColor: "#aaa",
     padding: 10,
     borderRadius: 8,
     marginBottom: 10,
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#333",
   },
   cryptoIcon: { width: 40, height: 40, marginRight: 10 },
-  cryptoName: { fontSize: 18, color: "#fff" },
+  cryptoName: { fontSize: 18, color: "#000" },
   cryptoPrice: { fontSize: 16, color: "#aaa" },
   buttonContainer: { marginTop: 20, alignItems: "center", gap: 10 },
 });

@@ -7,22 +7,23 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Image } from "react-native";
 import bell from "../assets/bell.png";
-import newspaper from "../assets/newspaper.png";
+import crypto from "../assets/crypto.png";
 import { Home } from "./screens/Home";
 import { Profile } from "./screens/Profile";
 import { Settings } from "./screens/Settings";
 import { Updates } from "./screens/Updates";
 import { NotFound } from "./screens/NotFound";
+import { CryptoDetails } from "./screens/CryptoDetails";
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Home: {
       screen: Home,
       options: {
-        title: "Feed",
+        title: "Crypto",
         tabBarIcon: ({ color, size }) => (
           <Image
-            source={newspaper}
+            source={crypto}
             tintColor={color}
             style={{
               width: size,
@@ -57,6 +58,12 @@ const RootStack = createNativeStackNavigator({
       options: {
         title: "Home",
         headerShown: false,
+      },
+    },
+    CryptoDetails: {
+      screen: CryptoDetails,
+      options: {
+        title: "Crypto Details",
       },
     },
     Profile: {

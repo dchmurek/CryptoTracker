@@ -16,3 +16,23 @@ export const fetchCryptoData = async (): Promise<Crypto[]> => {
     return [];
   }
 };
+
+export const fetchHistoricalData = async (
+  cryptoId: string,
+  days: number = 7
+): Promise<number[][]> => {
+  try {
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${cryptoId}/market_chart?vs_currency=usd&days=${days}`
+    );
+    if (!response.ok) {
+      throw new Error("Błąd podczas pobierania danych historycznych");
+    }
+    const data = await response.json();
+    // Zakładamy, że data.prices to tablica [timestamp, price]
+    return data.prices || [];
+  } catch (error) {
+    console.error("Błąd pobierania danych historycznych:", error);
+    return [];
+  }
+};
