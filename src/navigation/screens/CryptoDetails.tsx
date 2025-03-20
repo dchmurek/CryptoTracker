@@ -38,7 +38,7 @@ export function CryptoDetails({ route }: CryptoDetailsProps) {
 
   useEffect(() => {
     const loadHistoricalData = async () => {
-      const data = await fetchHistoricalData(crypto.id, 7);
+      const data = await fetchHistoricalData(crypto.id, 2);
       setHistoricalData(data);
       setLoading(false);
     };
@@ -46,10 +46,12 @@ export function CryptoDetails({ route }: CryptoDetailsProps) {
   }, [crypto.id]);
 
   const prices = historicalData.map((item) => item[1]);
-  const labels = historicalData.map((item) => {
-    const date = new Date(item[0]);
-    return `${date.getMonth() + 1}/${date.getDate()}`;
-  });
+  const labels = historicalData
+    .filter((_, index) => index % 6 === 0)
+    .map((item) => {
+      const date = new Date(item[0]);
+      return `${date.getMonth() + 1}/${date.getDate()}`;
+    });
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -64,18 +66,7 @@ export function CryptoDetails({ route }: CryptoDetailsProps) {
       <Text style={styles.cryptoMarketCap}>
         🔹 Kapitalizacja: {crypto.market_cap?.toLocaleString()} USD
       </Text>
-      <Text style={styles.info}>
-        Wolumen: {crypto.total_volume?.toLocaleString()} USD
-      </Text>
-      <Text style={styles.info}>Najwyższa cena 24h: {crypto.high_24h} USD</Text>
-      <Text style={styles.info}>Najniższa cena 24h: {crypto.low_24h} USD</Text>
-      <Text style={styles.info}>ATH: {crypto.ath} USD</Text>
-      <Text style={styles.info}>ATL: {crypto.atl} USD</Text>
-      <Text style={styles.lastUpdated}>
-        Ostatnia aktualizacja: {new Date(crypto.last_updated).toLocaleString()}
-      </Text>
-
-      <Text style={styles.chartHeader}>Historia cen (7 dni)</Text>
+      <Text style={styles.chartHeader}>Historia cen (2 dni)</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#000" />
       ) : historicalData.length > 0 ? (
@@ -91,30 +82,37 @@ export function CryptoDetails({ route }: CryptoDetailsProps) {
           width={screenWidth - 40}
           height={220}
           chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            backgroundGradientFrom: "#aaa",
+            backgroundGradientTo: "#eee",
+            decimalPlaces: 3,
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
             style: {
-              borderRadius: 16,
+              borderRadius: 2,
             },
             propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#ffa726",
+              r: "0",
             },
           }}
           bezier
           style={{
-            marginVertical: 8,
+            marginVertical: 20,
             borderRadius: 16,
           }}
         />
       ) : (
         <Text style={styles.info}>Brak danych historycznych</Text>
       )}
+      <Text style={styles.info}>
+        Wolumen: {crypto.total_volume?.toLocaleString()} USD
+      </Text>
+      <Text style={styles.info}>Najwyższa cena 24h: {crypto.high_24h} USD</Text>
+      <Text style={styles.info}>Najniższa cena 24h: {crypto.low_24h} USD</Text>
+      <Text style={styles.info}>ATH: {crypto.ath} USD</Text>
+      <Text style={styles.info}>ATL: {crypto.atl} USD</Text>
+      <Text style={styles.lastUpdated}>
+        Ostatnia aktualizacja: {new Date(crypto.last_updated).toLocaleString()}
+      </Text>
     </ScrollView>
   );
 }
@@ -161,6 +159,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#666",
     marginTop: 20,
+    marginBottom: 40,
   },
   chartHeader: {
     fontSize: 20,
